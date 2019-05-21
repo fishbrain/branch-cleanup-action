@@ -45,6 +45,16 @@ main(){
 			echo "Will not delete default branch (${default_branch}) for ${owner}/${repo}, exiting."
 			exit 0
 		fi
+		if [[ "$ref" == "develop" ]]; then
+			# Never delete the default branch.
+			echo "Will not delete develop branch for ${owner}/${repo}, exiting."
+			exit 0
+		fi
+		if [[ "$ref" == "master" ]]; then
+			# Never delete the default branch.
+			echo "Will not delete master branch for ${owner}/${repo}, exiting."
+			exit 0
+		fi
 
 		pulls_with_ref_as_base=$(
 			curl -XGET -fsSL \
