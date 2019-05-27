@@ -71,6 +71,18 @@ main(){
 			exit 0
 		fi
 
+		ref_existence_check=$(
+			curl -XGET -fsSL --head --write-out "%{http_code}" \
+				-H "${AUTH_HEADER}" \
+				-H "${API_HEADER}" \
+				"${URI}/repos/${owner}/${repo}/git/refs/heads/${ref}"
+		)
+		if [[ "$ref_existence_check" == "404" ]]; then
+			# Do not try to delete if branch is already gone
+			echo "${ref} does not exist on ${owner}/${repo}, exiting."
+			exit 0
+		fi
+
 		echo "Deleting branch ref $ref for owner ${owner}/${repo}..."
 		curl -XDELETE -fsSL \
 			-H "${AUTH_HEADER}" \
